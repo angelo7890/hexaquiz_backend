@@ -50,14 +50,8 @@ public class QuestionModel {
         this.image = image;
         this.scheduledDate = scheduledDate;
         this.sequence = sequence;
-        this.quizId = setQuizId(scheduledDate);
+        this.quizId = quizId;
     }
-
-    private String setQuizId(LocalDate date){
-        //pesquisar no banco se existe data igual a passada, se existir atribuir a quiz id o q esta la, se nao existir, criar um novo quizid
-        return UUID.randomUUID().toString();
-    }
-
     public void addOption(OptionModel option) {
         options.add(option);
         option.setQuestion(this);

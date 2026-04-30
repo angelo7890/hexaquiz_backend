@@ -51,7 +51,7 @@ public class UserModel {
     public UserModel() {}
 
 
-    public UserModel(String name, String username, String password, String profileImage, UserTypeEnum type) {
+    public UserModel(String name, String username, String password, String profileImage) {
         this.name = name;
         this.username = username;
         this.gameSessions = new ArrayList<>();

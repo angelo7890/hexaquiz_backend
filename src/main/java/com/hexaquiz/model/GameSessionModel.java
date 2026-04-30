@@ -36,7 +36,7 @@ public class GameSessionModel {
 
     public GameSessionModel() {}
 
-    public GameSessionModel(UserModel user, int gameSessionIndex, int points, boolean finished, LocalDateTime completedAt) {
+    public GameSessionModel(UserModel user, int gameSessionIndex, int points) {
         this.user = user;
         this.gameSessionIndex = gameSessionIndex;
         this.points = points;
