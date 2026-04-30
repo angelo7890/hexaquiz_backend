@@ -56,4 +56,80 @@ public class QuestionModel {
         options.add(option);
         option.setQuestion(this);
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public List<OptionModel> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<OptionModel> options) {
+        this.options = options;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public QuestionTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(QuestionTypeEnum type) {
+        this.type = type;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public int getBasePoints() {
+        return basePoints;
+    }
+
+    public void setBasePoints(int basePoints) {
+        this.basePoints = basePoints;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public LocalDate getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate(LocalDate scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
+    }
+
+    public String getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(String quizId) {
+        this.quizId = quizId;
+    }
 }

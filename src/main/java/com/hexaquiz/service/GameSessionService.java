@@ -28,10 +28,13 @@ public class GameSessionService {
 
     public void createGameSession(String userId, RequestCreateGameSessionDto dto){
        var user = userRepository.findByid(UUID.fromString(userId));
-       if(user == null){
-           throw new RuntimeException("User not found");
-       }
-       gameSessionRepository.save(new GameSessionModel(user, dto.gameSessionIndex(), dto.points()));
+        if(user == null){
+            throw new RuntimeException("User not found");
+        }
+       GameSessionModel gameSessionModel = new GameSessionModel(dto.gameSessionIndex(), dto.points());
+       user.getGameSessions().add(gameSessionModel);
+       userRepository.save(user);
+       gameSessionRepository.save(gameSessionModel);
     }
 
     public ResponseGameSessionDto getGameSession(String GameSessionId){
@@ -55,6 +58,5 @@ public class GameSessionService {
     public void DeleteGameSession(String GameSessionId){
         gameSessionRepository.delete(gameSessionRepository.findByid(UUID.fromString(GameSessionId)));
     }
-
 
 }

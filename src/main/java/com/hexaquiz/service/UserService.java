@@ -59,8 +59,9 @@ public class UserService {
         var user = userRepository.findByid(UUID.fromString(id));
         user.setProfileImage(profileImage);
         userRepository.save(user);
-    }
 
+        //TODO: tenho que retornar o usuario com o avatar atualizado
+    }
     public void updatePassword(String id, String password) {
         if(password.length() < 6) {
             throw new IllegalArgumentException("Password too short");
