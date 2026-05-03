@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.request;
+﻿package com.hexaquiz.dto.option;
 
 public record OptionDto(
         String text,

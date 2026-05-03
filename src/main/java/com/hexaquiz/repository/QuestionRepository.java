@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface QuestionRepository extends JpaRepository<QuestionModel, UUID> {
     Optional<QuestionModel> findByScheduledDate(LocalDate date);
+
+    Optional<QuestionModel> findById(UUID id);
 }

@@ -1,6 +1,6 @@
 ﻿package com.hexaquiz.service;
 
-import com.hexaquiz.dto.request.OptionDto;
+import com.hexaquiz.dto.option.OptionDto;
 import com.hexaquiz.dto.request.RequestCreateQuestionDto;
 import com.hexaquiz.model.OptionModel;
 import com.hexaquiz.model.QuestionModel;

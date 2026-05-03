@@ -4,11 +4,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record RequestCreateGameSessionDto(
-        @NotNull
-        int gameSessionIndex,
-        @NotEmpty
+import java.util.UUID;
+
+public record RequestAnswerDto(
+
         @NotBlank
-        String quizId
+        @NotEmpty
+        UUID questionId,
+
+        @NotBlank
+        @NotEmpty
+        String answer,
+
+        @NotNull
+        int attempts
 ) {
 }

@@ -2,10 +2,8 @@
 
 import com.hexaquiz.dto.request.RequestCreateUserDto;
 import com.hexaquiz.dto.response.ResponsePaginationUserDto;
-import com.hexaquiz.dto.response.ResponseStatisticsDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
 import com.hexaquiz.mapper.UserMapper;
-import com.hexaquiz.model.GameSessionModel;
 import com.hexaquiz.model.UserModel;
 import com.hexaquiz.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -46,13 +44,6 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserModel> users = userRepository.findAll(pageable);
         return userMapper.toPaginationDto(users);
-    }
-
-    public ResponseStatisticsDto statisticsUser(String id){
-        int quizzesPlayed = userRepository.countFinishedByUserId(UUID.fromString(id));
-        int pontos = userRepository.sumPointsByUserId(UUID.fromString(id));
-        int accuracy = quizzesPlayed / pontos * 100;
-        return new ResponseStatisticsDto(quizzesPlayed, accuracy);
     }
 
     public void updateProfileImage(String id, String profileImage) {

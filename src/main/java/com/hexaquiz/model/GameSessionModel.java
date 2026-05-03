@@ -17,6 +17,8 @@ public class GameSessionModel {
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
 
+    private String quizId;
+
     private int gameSessionIndex;
 
     private int points;
@@ -36,9 +38,10 @@ public class GameSessionModel {
 
     public GameSessionModel() {}
 
-    public GameSessionModel(int gameSessionIndex, int points) {
+    public GameSessionModel(int gameSessionIndex, String quizId) {
         this.gameSessionIndex = gameSessionIndex;
-        this.points = points;
+        this.quizId = quizId;
+        this.points = 0;
         this.finished = false;
         this.completedAt = null;
     }
@@ -46,6 +49,8 @@ public class GameSessionModel {
     public UUID getId() {
         return id;
     }
+
+
 
     public UserModel getUser() {
         return user;
