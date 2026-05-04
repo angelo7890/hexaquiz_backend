@@ -6,14 +6,21 @@ public enum QuestionTypeEnum {
     GUESS_THE_WORD(3),
     WORDLE(4),
     ORDERING(5);
-    private final int codigo;
+    private final int code;
 
-    QuestionTypeEnum(int codigo) {
-        this.codigo = codigo;
+    QuestionTypeEnum(int code) {
+        this.code = code;
     }
 
-    public int getCodigo() {
-        return codigo;
-
+    public int getCode() {
+        return code;
+    }
+    public static QuestionTypeEnum fromCode(int code) {
+        for (QuestionTypeEnum type : QuestionTypeEnum.values()) {
+            if (type.getCode() == code) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Código de tipo de questão inválido: " + code);
     }
     }

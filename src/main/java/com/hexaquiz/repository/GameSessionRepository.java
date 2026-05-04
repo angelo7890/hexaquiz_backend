@@ -35,4 +35,6 @@ public interface GameSessionRepository extends JpaRepository<GameSessionModel, U
     Optional<GameSessionModel> findByUserIdAndFinishedFalse(UUID userId);
 
     boolean existsByUserIdAndFinishedFalse(UUID userId);
+
+    Optional<GameSessionModel> findByUserIdAndQuizId(UUID userId, String quizId);
 }

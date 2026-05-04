@@ -23,6 +23,7 @@ public class QuestionModel {
     private String text;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private QuestionTypeEnum type;
 
     @Column(nullable = false)

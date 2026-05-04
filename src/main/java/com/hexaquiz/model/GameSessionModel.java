@@ -3,6 +3,8 @@
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 @Entity
@@ -33,7 +35,7 @@ public class GameSessionModel {
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now(ZoneId.of("America/Sao_Paulo")).toLocalDateTime();
     }
 
     public GameSessionModel() {}
