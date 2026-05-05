@@ -23,6 +23,9 @@ public class UserModel {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<GameSessionModel> gameSessions;
 
@@ -53,13 +56,13 @@ public class UserModel {
     public UserModel() {}
 
 
-    public UserModel(String name, String username, String password, String profileImage) {
+    public UserModel(String name, String username, String password, String profileImage, String email) {
         this.name = name;
         this.username = username;
         this.gameSessions = new ArrayList<>();
         this.password = password;
         this.profileImage = profileImage;
-        this.type = UserTypeEnum.USER;
+        this.email = email;
     }
 
     public UUID getId() {
@@ -80,6 +83,13 @@ public class UserModel {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<GameSessionModel> getGameSessions() {

@@ -29,8 +29,11 @@ public class UserService {
          if(userRepository.existsByusername(dto.username())){
              throw new IllegalArgumentException("Username already exists");
          }
+         if(userRepository.existsByemail(dto.email())){
+             throw new IllegalArgumentException("Email already exists");
+         }
 
-         var user = userRepository.save(new UserModel(dto.name(), dto.username(), dto.password(), dto.profileUser()));
+         var user = userRepository.save(new UserModel(dto.name(), dto.username(), dto.password(), dto.profileUser(), dto.email()));
 
          return userMapper.toDto(user);
     }

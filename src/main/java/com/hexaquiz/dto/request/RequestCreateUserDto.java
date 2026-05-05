@@ -14,6 +14,10 @@ public record RequestCreateUserDto(
 
         @NotEmpty
         @NotBlank
+        String email,
+
+        @NotEmpty
+        @NotBlank
         String password,
 
         @NotEmpty

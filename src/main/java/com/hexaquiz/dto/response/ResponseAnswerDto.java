@@ -2,7 +2,6 @@
 
 public record ResponseAnswerDto(
         boolean correct,
-        int pointsEarned,
         String correctAnswerPayload
 ) {
 }

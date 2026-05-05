@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<UserModel, UUID> {
     Integer countFinishedByUserId(UUID userId);
 
     boolean existsByusername(String username);
+    boolean existsByemail(String email);
 
     UserModel findByid(UUID id);
 }

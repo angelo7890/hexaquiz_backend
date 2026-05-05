@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -59,61 +60,60 @@ public class QuizService {
     }
 
     @Transactional
-    public ResponseAnswerDto answerQuestion(RequestAnswerDto request, String userId) {
+    public ResponseAnswerDto answerQuestion(RequestAnswerDto request, UUID userId) {
 
-        var question = questionRepository.findById(request.questionId())
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+        var session = gameSessionRepository
+                .findByUserIdAndFinishedFalse(userId)
+                .orElseThrow(() -> new RuntimeException("No active session found"));
 
-        boolean correct = question.getAnswer()
+        LocalDate today = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        List<QuestionModel> questions =
+                questionRepository.findByScheduledDateOrderBySequenceAsc(today);
+
+        QuestionModel currentQuestion = questions.get(session.getGameSessionIndex());
+
+        if (!currentQuestion.getId().equals(request.questionId())) {
+            throw new RuntimeException("Invalid question for current index");
+        }
+
+        boolean correct = currentQuestion.getAnswer()
                 .equalsIgnoreCase(request.answer());
 
-        int pointsEarned = calculatePoints(
-                correct,
-                request.attempts(),
-                question.getBasePoints()
-        );
+        int nextIndex = session.getGameSessionIndex() + 1;
 
-        var session = gameSessionRepository
-                .findByUserIdAndFinishedFalse(UUID.fromString(userId))
-                .orElseThrow(() -> new RuntimeException("No active session found"));
-
-        if (correct) {
-            session.setPoints(session.getPoints() + pointsEarned);
-        }
-        return new ResponseAnswerDto(
-                correct,
-                pointsEarned,
-                question.getAnswer()
-        );
-    }
-
-    @Transactional
-    public void advanceQuiz(RequestAdvancedDto request, String userId) {
-
-        var session = gameSessionRepository
-                .findByUserIdAndFinishedFalse(UUID.fromString(userId))
-                .orElseThrow(() -> new RuntimeException("No active session found"));
-
-        session.setGameSessionIndex(request.newIndex());
-
-        if (request.finished()) {
+        if (nextIndex >= questions.size()) {
             session.setFinished(true);
             session.setCompletedAt(LocalDateTime.now());
+        } else {
+            session.setGameSessionIndex(nextIndex);
         }
 
         gameSessionRepository.save(session);
-    }
 
+        return new ResponseAnswerDto(
+                correct,
+                currentQuestion.getAnswer()
+        );
+    }
     public ResponseDailyQuestionsDto getDailyQuestions(String userId) {
+
         LocalDate today = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-        String quizId = generateDailyQuizId(today);
 
         List<QuestionModel> questions =
                 questionRepository.findByScheduledDateOrderBySequenceAsc(today);
 
+        if (questions.isEmpty()) {
+            throw new RuntimeException("No questions available for today");
+        }
+
+        String quizId = questions.getFirst().getQuizId();
+
         var session = gameSessionRepository
                 .findByUserIdAndQuizId(UUID.fromString(userId), quizId)
-                .orElseGet(() -> gameSessionService.createGameSession(userId, new RequestCreateGameSessionDto(0, quizId)));
+                .orElseGet(() -> gameSessionService.createGameSession(
+                        userId,
+                        new RequestCreateGameSessionDto(0, quizId)
+                ));
 
         List<QuestionDto> questionDTOs = questions.stream()
                 .map(this::mapQuestion)
@@ -128,24 +128,6 @@ public class QuizService {
         return new ResponseDailyQuestionsDto(questionDTOs, sessionDTO);
     }
 
-
-
-
-    private int calculatePoints(boolean correct, int attempts, int basePoints) {
-        if (!correct) return 0;
-
-        return switch (attempts) {
-            case 1 -> basePoints;
-            case 2 -> (int) (basePoints * 0.7);
-            case 3 -> (int) (basePoints * 0.4);
-            default -> 0;
-        };
-    }
-
-    private String generateDailyQuizId(LocalDate date) {
-        return "DAILY_" + date;
-    }
-
     private QuestionDto mapQuestion(QuestionModel q) {
 
         String answer;
@@ -158,7 +140,7 @@ public class QuizService {
 
             case 3, 4 -> {
                 answer = Base64.getEncoder()
-                        .encodeToString(q.getAnswer().getBytes());
+                        .encodeToString(q.getAnswer().getBytes(StandardCharsets.UTF_8));
             }
 
             default -> answer = "HIDDEN";

@@ -14,9 +14,6 @@ public record RequestAnswerDto(
 
         @NotBlank
         @NotEmpty
-        String answer,
-
-        @NotNull
-        int attempts
+        String answer
 ) {
 }
