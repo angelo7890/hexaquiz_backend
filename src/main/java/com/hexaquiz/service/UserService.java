@@ -43,7 +43,7 @@ public class UserService {
              throw new IllegalArgumentException("Email already exists");
          }
 
-         var user = userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));
+        userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));
 
          return authService.login(new RequestLoginDto(dto.username(), dto.password()));
     }
