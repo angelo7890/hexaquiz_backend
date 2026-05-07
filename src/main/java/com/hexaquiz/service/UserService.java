@@ -1,6 +1,8 @@
 ﻿package com.hexaquiz.service;
 
 import com.hexaquiz.dto.request.RequestCreateUserDto;
+import com.hexaquiz.dto.request.RequestUpdatePasswordDto;
+import com.hexaquiz.dto.request.RequestUpdateProfileImageDto;
 import com.hexaquiz.dto.response.ResponsePaginationUserDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
 import com.hexaquiz.mapper.UserMapper;
@@ -53,18 +55,18 @@ public class UserService {
         return userMapper.toPaginationDto(users);
     }
 
-    public ResponseUserDto updateProfileImage(String id, String profileImage) {
+    public ResponseUserDto updateProfileImage(String id, RequestUpdateProfileImageDto dto) {
         var user = userRepository.findByid(UUID.fromString(id));
-        user.setProfileImage(profileImage);
+        user.setProfileImage(dto.profileImage());
         userRepository.save(user);
         return  userMapper.toDto(user);
     }
-    public void updatePassword(String id, String password) {
-        if(password.length() < 6) {
+    public void updatePassword(String id, RequestUpdatePasswordDto dto) {
+        if(dto.password().length() < 6) {
             throw new IllegalArgumentException("Password too short");
         }
         var user = userRepository.findByid(UUID.fromString(id));
-        user.setPassword(password);
+        user.setPassword(dto.password());
         userRepository.save(user);
     }
 

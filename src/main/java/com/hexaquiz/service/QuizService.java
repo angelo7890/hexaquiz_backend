@@ -60,10 +60,10 @@ public class QuizService {
     }
 
     @Transactional
-    public ResponseAnswerDto answerQuestion(RequestAnswerDto request, UUID userId) {
+    public ResponseAnswerDto answerQuestion(RequestAnswerDto request, String userId) {
 
         var session = gameSessionRepository
-                .findByUserIdAndFinishedFalse(userId)
+                .findByUserIdAndFinishedFalse(UUID.fromString(userId))
                 .orElseThrow(() -> new RuntimeException("No active session found"));
 
         LocalDate today = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
