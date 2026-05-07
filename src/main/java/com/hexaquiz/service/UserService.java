@@ -9,6 +9,7 @@ import com.hexaquiz.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -17,9 +18,12 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper = new UserMapper();
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseUserDto createUser(RequestCreateUserDto dto) {
@@ -33,7 +37,7 @@ public class UserService {
              throw new IllegalArgumentException("Email already exists");
          }
 
-         var user = userRepository.save(new UserModel(dto.name(), dto.username(), dto.password(), dto.profileUser(), dto.email()));
+         var user = userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));
 
          return userMapper.toDto(user);
     }

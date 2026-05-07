@@ -2,17 +2,21 @@
 
 import com.hexaquiz.enums.UserTypeEnum;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class UserModel {
+public class UserModel implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -63,6 +67,7 @@ public class UserModel {
         this.password = password;
         this.profileImage = profileImage;
         this.email = email;
+        this.type = UserTypeEnum.USER;
     }
 
     public UUID getId() {
@@ -81,23 +86,33 @@ public class UserModel {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public List<GameSessionModel> getGameSessions() {
-        return gameSessions;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setGameSessions(List<GameSessionModel> gameSessions) {
-        this.gameSessions = gameSessions;
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.type ==UserTypeEnum.ADM){
+            return List.of(new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER"));
+        }else{
+            return List.of(new SimpleGrantedAuthority("USER"));
+        }
     }
 
     public String getPassword() {
@@ -120,12 +135,12 @@ public class UserModel {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public UserTypeEnum getType() {
         return type;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
 }
