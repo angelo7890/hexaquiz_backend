@@ -53,12 +53,11 @@ public class UserService {
         return userMapper.toPaginationDto(users);
     }
 
-    public void updateProfileImage(String id, String profileImage) {
+    public ResponseUserDto updateProfileImage(String id, String profileImage) {
         var user = userRepository.findByid(UUID.fromString(id));
         user.setProfileImage(profileImage);
         userRepository.save(user);
-
-        //TODO: tenho que retornar o usuario com o avatar atualizado
+        return  userMapper.toDto(user);
     }
     public void updatePassword(String id, String password) {
         if(password.length() < 6) {
