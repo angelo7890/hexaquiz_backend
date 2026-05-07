@@ -30,7 +30,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET , "/hexaquiz/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/hexaquiz/user/create").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/hexaquiz/user/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -32,7 +32,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
     }
 
-    @PutMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ResponseLoginDto> login(@Valid @RequestBody RequestLoginDto request){
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
     }
