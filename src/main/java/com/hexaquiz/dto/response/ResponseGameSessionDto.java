@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.response;
+package com.hexaquiz.dto.response;
 
 import java.time.LocalDateTime;
 

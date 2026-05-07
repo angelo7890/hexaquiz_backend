@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.security;
+package com.hexaquiz.security;
 
 import com.hexaquiz.enums.UserTypeEnum;
 import com.hexaquiz.model.UserModel;

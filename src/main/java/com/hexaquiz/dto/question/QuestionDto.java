@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.question;
+package com.hexaquiz.dto.question;
 
 import com.hexaquiz.dto.option.OptionDailyDto;
 import com.hexaquiz.enums.QuestionTypeEnum;

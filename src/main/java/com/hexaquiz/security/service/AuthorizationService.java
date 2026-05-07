@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.security.service;
+package com.hexaquiz.security.service;
 
 import com.hexaquiz.model.UserModel;
 import com.hexaquiz.repository.UserRepository;

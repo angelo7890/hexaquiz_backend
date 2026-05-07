@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.enums;
+package com.hexaquiz.enums;
 
 public enum UserTypeEnum {
     USER("USER"),

@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.controller;
+package com.hexaquiz.controller;
 
 import com.hexaquiz.dto.request.RequestAnswerDto;
 import com.hexaquiz.dto.response.ResponseAnswerDto;

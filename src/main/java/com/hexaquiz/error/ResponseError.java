@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.error;
+package com.hexaquiz.error;
 
 import org.springframework.http.HttpStatus;
 

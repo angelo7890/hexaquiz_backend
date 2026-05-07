@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.repository;
+package com.hexaquiz.repository;
 
 import com.hexaquiz.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.request;
+package com.hexaquiz.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

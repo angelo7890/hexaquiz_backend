@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.ranking;
+package com.hexaquiz.dto.ranking;
 
 import java.util.UUID;
 

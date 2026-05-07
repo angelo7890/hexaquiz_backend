@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.security.service;
+package com.hexaquiz.security.service;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.JWT;

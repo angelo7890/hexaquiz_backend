@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.tokens;
+package com.hexaquiz.dto.tokens;
 
 public record Tokens(
         String accessToken,

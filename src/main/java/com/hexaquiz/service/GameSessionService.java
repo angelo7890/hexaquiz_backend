@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.service;
+package com.hexaquiz.service;
 
 import com.hexaquiz.dto.ranking.RankingDto;
 import com.hexaquiz.dto.request.RequestCreateGameSessionDto;

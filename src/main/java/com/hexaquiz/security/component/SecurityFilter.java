@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.security.component;
+package com.hexaquiz.security.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexaquiz.error.ResponseError;

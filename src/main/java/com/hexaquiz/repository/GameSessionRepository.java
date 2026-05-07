@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.repository;
+package com.hexaquiz.repository;
 
 import com.hexaquiz.dto.ranking.RankingDto;
 import com.hexaquiz.model.GameSessionModel;

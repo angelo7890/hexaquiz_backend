@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.mapper;
+package com.hexaquiz.mapper;
 
 import com.hexaquiz.dto.ranking.RankingDto;
 import com.hexaquiz.dto.response.ResponsePaginationRankingDto;

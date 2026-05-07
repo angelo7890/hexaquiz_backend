@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.session;
+package com.hexaquiz.dto.session;
 
 public record SessionDto(
         int index,

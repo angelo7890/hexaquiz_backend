@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.security.configuration;
+package com.hexaquiz.security.configuration;
 
 import com.hexaquiz.security.component.SecurityFilter;
 import org.springframework.context.annotation.Bean;

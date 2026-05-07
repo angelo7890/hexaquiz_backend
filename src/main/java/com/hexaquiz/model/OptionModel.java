@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.model;
+package com.hexaquiz.model;
 
 import jakarta.persistence.*;
 
