@@ -1,13 +1,16 @@
 package com.hexaquiz.service;
 
 import com.hexaquiz.dto.request.RequestCreateUserDto;
+import com.hexaquiz.dto.request.RequestLoginDto;
 import com.hexaquiz.dto.request.RequestUpdatePasswordDto;
 import com.hexaquiz.dto.request.RequestUpdateProfileImageDto;
+import com.hexaquiz.dto.response.ResponseLoginDto;
 import com.hexaquiz.dto.response.ResponsePaginationUserDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
 import com.hexaquiz.mapper.UserMapper;
 import com.hexaquiz.model.UserModel;
 import com.hexaquiz.repository.UserRepository;
+import com.hexaquiz.security.service.AuthService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,15 +23,16 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper = new UserMapper();
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, AuthService authService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.authService = authService;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseUserDto createUser(RequestCreateUserDto dto) {
+    public ResponseLoginDto createUser(RequestCreateUserDto dto) {
          if(dto.password().length() < 6) {
              throw new IllegalArgumentException("Password too short");
          }
@@ -41,7 +45,7 @@ public class UserService {
 
          var user = userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));
 
-         return userMapper.toDto(user);
+         return authService.login(new RequestLoginDto(dto.username(), dto.password()));
     }
 
     public ResponseUserDto getUserById(String id) {
