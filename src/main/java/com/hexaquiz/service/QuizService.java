@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -47,9 +48,14 @@ public class QuizService {
     }
 
     public ResponseStatisticsDto statisticsUser(String id){
+
         int quizzesPlayed = userRepository.countFinishedByUserId(UUID.fromString(id));
         int pontos = userRepository.sumPointsByUserId(UUID.fromString(id));
-        int accuracy = quizzesPlayed / pontos * 100;
+
+        int accuracy = pontos == 0
+                ? 0
+                : quizzesPlayed / pontos * 100;
+
         return new ResponseStatisticsDto(quizzesPlayed, accuracy);
     }
 
@@ -72,12 +78,11 @@ public class QuizService {
 
         QuestionModel currentQuestion = questions.get(session.getGameSessionIndex());
 
-        if (!currentQuestion.getId().equals(request.questionId())) {
+        if (!currentQuestion.getId().equals(UUID.fromString(request.questionId()))) {
             throw new RuntimeException("Invalid question for current index");
         }
 
-        boolean correct = currentQuestion.getAnswer()
-                .equalsIgnoreCase(request.answer());
+        boolean correct = normalize(currentQuestion.getAnswer()).equals(normalize(request.answer()));
 
         int nextIndex = session.getGameSessionIndex() + 1;
 
@@ -101,8 +106,6 @@ public class QuizService {
 
         List<QuestionModel> questions =
                 questionRepository.findByScheduledDateOrderBySequenceAsc(today);
-
-        System.out.println(questions.getFirst().toString());
 
         if (questions.isEmpty()) {
             throw new RuntimeException("No questions available for today");
@@ -169,4 +172,10 @@ public class QuizService {
         );
     }
 
+    private String normalize(String value){
+        return Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .trim()
+                .toLowerCase();
+    }
 }

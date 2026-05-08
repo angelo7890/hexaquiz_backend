@@ -10,7 +10,7 @@ public record RequestAnswerDto(
 
         @NotBlank
         @NotEmpty
-        UUID questionId,
+        String questionId,
 
         @NotBlank
         @NotEmpty
