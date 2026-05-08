@@ -4,6 +4,7 @@ import com.hexaquiz.enums.QuestionTypeEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,10 +17,10 @@ public class QuestionModel {
     private UUID id;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<OptionModel> options;
+    private List<OptionModel> options = new ArrayList<>();
 
-    @Lob
-    @Column(nullable = false)
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
     @Column(nullable = false)

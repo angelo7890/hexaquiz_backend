@@ -102,6 +102,8 @@ public class QuizService {
         List<QuestionModel> questions =
                 questionRepository.findByScheduledDateOrderBySequenceAsc(today);
 
+        System.out.println(questions.getFirst().toString());
+
         if (questions.isEmpty()) {
             throw new RuntimeException("No questions available for today");
         }

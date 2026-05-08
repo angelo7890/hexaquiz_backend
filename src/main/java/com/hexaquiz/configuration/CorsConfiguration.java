@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.configuration;
+package com.hexaquiz.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

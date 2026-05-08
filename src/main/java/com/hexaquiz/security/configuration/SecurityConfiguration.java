@@ -32,6 +32,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/user/create").permitAll()
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/hexaquiz/question/create").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/hexaquiz/daily/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
