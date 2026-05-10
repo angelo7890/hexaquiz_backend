@@ -1,7 +1,7 @@
 package com.hexaquiz.security.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hexaquiz.error.ResponseError;
+import com.hexaquiz.dto.error.ResponseError;
 import com.hexaquiz.security.UserPrincipal;
 import com.hexaquiz.security.service.AuthorizationService;
 import com.hexaquiz.security.service.JwtService;

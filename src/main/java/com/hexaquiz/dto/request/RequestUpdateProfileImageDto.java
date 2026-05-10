@@ -1,4 +1,10 @@
 package com.hexaquiz.dto.request;
 
-public record RequestUpdateProfileImageDto(String profileImage) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
+public record RequestUpdateProfileImageDto(
+        @NotBlank(message = "profileUser nao pode ser em branco")
+        @NotEmpty(message = "ProfileUser nao pode ser vazio")
+        String profileImage) {
 }

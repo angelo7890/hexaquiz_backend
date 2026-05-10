@@ -4,12 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
 public record RequestLoginDto(
-        @NotEmpty
-        @NotBlank
+        @NotBlank(message = "username nao pode ser em branco")
+        @NotEmpty(message = "username nao pode ser vazio")
         String username,
 
-        @NotEmpty
-        @NotBlank
+        @NotBlank(message = "password nao pode ser em branco")
+        @NotEmpty(message = "password nao pode ser vazio")
         String password
 ) {
 }

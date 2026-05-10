@@ -24,7 +24,6 @@ public interface GameSessionRepository extends JpaRepository<GameSessionModel, U
         )
         FROM GameSessionModel g
         JOIN g.user u
-        WHERE g.finished = true
         GROUP BY u.id, u.username, u.name, u.profileImage
         ORDER BY SUM(g.points) DESC
     """)

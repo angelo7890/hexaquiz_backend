@@ -8,12 +8,12 @@ import java.util.UUID;
 
 public record RequestAnswerDto(
 
-        @NotBlank
-        @NotEmpty
+        @NotBlank(message = "questionId nao pode ser em branco")
+        @NotEmpty(message = "questionId nao pode ser vazio")
         String questionId,
 
-        @NotBlank
-        @NotEmpty
+        @NotBlank(message = "answer nao pode ser em branco")
+        @NotEmpty(message = "answer nao pode ser vazio")
         String answer
 ) {
 }

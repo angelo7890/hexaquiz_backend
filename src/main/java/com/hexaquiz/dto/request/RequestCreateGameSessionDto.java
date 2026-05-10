@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record RequestCreateGameSessionDto(
-        @NotNull
+        @NotNull(message = "gameSessionIndex nao pode ser nulo")
         int gameSessionIndex,
-        @NotEmpty
-        @NotBlank
+        @NotBlank(message = "quizId nao pode ser em branco")
+        @NotEmpty(message = "quizId nao pode ser vazio")
         String quizId
 ) {
 }

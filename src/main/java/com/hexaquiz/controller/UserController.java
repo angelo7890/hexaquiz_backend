@@ -47,12 +47,12 @@ public class UserController {
     }
 
     @PatchMapping("/update/image/{id}")
-    public ResponseEntity<ResponseUserDto> updateImage(@PathVariable String id, @RequestBody RequestUpdateProfileImageDto dto){
+    public ResponseEntity<ResponseUserDto> updateImage(@PathVariable String id, @RequestBody @Valid RequestUpdateProfileImageDto dto){
         return ResponseEntity.ok(userService.updateProfileImage(id, dto));
     }
 
     @PatchMapping("/update/password/{id}")
-    public ResponseEntity<?>  updatePassword(@PathVariable String id, @RequestBody RequestUpdatePasswordDto dto){
+    public ResponseEntity<?>  updatePassword(@PathVariable String id, @RequestBody @Valid RequestUpdatePasswordDto dto){
         userService.updatePassword(id, dto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

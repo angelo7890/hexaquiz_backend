@@ -3,7 +3,6 @@ package com.hexaquiz.service;
 import com.hexaquiz.dto.option.OptionDailyDto;
 import com.hexaquiz.dto.question.QuestionDto;
 import com.hexaquiz.dto.ranking.RankingDto;
-import com.hexaquiz.dto.request.RequestAdvancedDto;
 import com.hexaquiz.dto.request.RequestAnswerDto;
 import com.hexaquiz.dto.request.RequestCreateGameSessionDto;
 import com.hexaquiz.dto.response.ResponseAnswerDto;
@@ -11,6 +10,7 @@ import com.hexaquiz.dto.response.ResponseDailyQuestionsDto;
 import com.hexaquiz.dto.response.ResponsePaginationRankingDto;
 import com.hexaquiz.dto.response.ResponseStatisticsDto;
 import com.hexaquiz.dto.session.SessionDto;
+import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.mapper.RankingMapper;
 import com.hexaquiz.model.QuestionModel;
 import com.hexaquiz.repository.GameSessionRepository;
@@ -20,6 +20,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -70,7 +72,7 @@ public class QuizService {
 
         var session = gameSessionRepository
                 .findByUserIdAndFinishedFalse(UUID.fromString(userId))
-                .orElseThrow(() -> new RuntimeException("No active session found"));
+                .orElseThrow(() -> new ErrorException("Sem sessao ativa para esse id: "+ userId, HttpStatus.BAD_REQUEST));
 
         LocalDate today = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
         List<QuestionModel> questions =
@@ -79,11 +81,13 @@ public class QuizService {
         QuestionModel currentQuestion = questions.get(session.getGameSessionIndex());
 
         if (!currentQuestion.getId().equals(UUID.fromString(request.questionId()))) {
-            throw new RuntimeException("Invalid question for current index");
+            throw new ErrorException("id das questoes sao diferentes", HttpStatus.BAD_REQUEST);
         }
 
         boolean correct = normalize(currentQuestion.getAnswer()).equals(normalize(request.answer()));
-
+        if(correct){
+            session.setPoints(session.getPoints()+ currentQuestion.getBasePoints());
+        }
         int nextIndex = session.getGameSessionIndex() + 1;
 
         if (nextIndex >= questions.size()) {
@@ -108,17 +112,22 @@ public class QuizService {
                 questionRepository.findByScheduledDateOrderBySequenceAsc(today);
 
         if (questions.isEmpty()) {
-            throw new RuntimeException("No questions available for today");
+            throw new ErrorException("Sem questoes disponiveis para esse dia: "+today, HttpStatus.OK);
         }
 
         String quizId = questions.getFirst().getQuizId();
 
         var session = gameSessionRepository
                 .findByUserIdAndQuizId(UUID.fromString(userId), quizId)
-                .orElseGet(() -> gameSessionService.createGameSession(
-                        userId,
-                        new RequestCreateGameSessionDto(0, quizId)
-                ));
+                .orElseGet(() -> {
+                            gameSessionRepository.findByUserIdAndFinishedFalse(UUID.fromString(userId)).
+                                    ifPresent(oldSession -> {
+                                        oldSession.setFinished(true);
+                                        oldSession.setCompletedAt(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+                                        gameSessionRepository.save(oldSession);
+                                    });
+                            return gameSessionService.createGameSession(userId,new RequestCreateGameSessionDto(0,quizId));
+                });
 
         List<QuestionDto> questionDTOs = questions.stream()
                 .map(this::mapQuestion)

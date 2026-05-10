@@ -2,6 +2,8 @@ package com.hexaquiz.dto.request;
 
 import com.hexaquiz.dto.option.OptionDto;
 import com.hexaquiz.enums.QuestionTypeEnum;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDate;
 import java.util.List;

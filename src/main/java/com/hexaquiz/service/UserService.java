@@ -7,6 +7,7 @@ import com.hexaquiz.dto.request.RequestUpdateProfileImageDto;
 import com.hexaquiz.dto.response.ResponseLoginDto;
 import com.hexaquiz.dto.response.ResponsePaginationUserDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
+import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.mapper.UserMapper;
 import com.hexaquiz.model.UserModel;
 import com.hexaquiz.repository.UserRepository;
@@ -14,6 +15,7 @@ import com.hexaquiz.security.service.AuthService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +36,13 @@ public class UserService {
 
     public ResponseLoginDto createUser(RequestCreateUserDto dto) {
          if(dto.password().length() < 6) {
-             throw new IllegalArgumentException("Password too short");
+             throw new ErrorException("Password deve conter no minimo 6 caracteres", HttpStatus.BAD_REQUEST );
          }
          if(userRepository.existsByusername(dto.username())){
-             throw new IllegalArgumentException("Username already exists");
+             throw new ErrorException("Username ja existe", HttpStatus.BAD_REQUEST);
          }
          if(userRepository.existsByemail(dto.email())){
-             throw new IllegalArgumentException("Email already exists");
+             throw new ErrorException("Email ja existe", HttpStatus.BAD_REQUEST);
          }
 
         userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));

@@ -5,6 +5,7 @@ import com.hexaquiz.dto.request.RequestCreateGameSessionDto;
 import com.hexaquiz.dto.response.ResponseGameSessionDto;
 import com.hexaquiz.dto.response.ResponsePaginationGameSessionDto;
 import com.hexaquiz.dto.response.ResponsePaginationRankingDto;
+import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.mapper.GameSessionMapper;
 import com.hexaquiz.mapper.RankingMapper;
 import com.hexaquiz.model.GameSessionModel;
@@ -15,7 +16,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponseException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -38,12 +41,12 @@ public class GameSessionService {
         UUID uuid = UUID.fromString(userId);
 
         UserModel user = userRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ErrorException("usuario nao encontrado", HttpStatus.BAD_REQUEST));
         boolean hasActive = gameSessionRepository
                 .existsByUserIdAndFinishedFalse(uuid);
 
         if (hasActive) {
-            throw new RuntimeException("User already has an active session");
+            throw new ErrorException("usuario tem uma session ativa", HttpStatus.CONFLICT);
         }
         GameSessionModel session = new GameSessionModel(dto.gameSessionIndex(), dto.quizId());
         session.setUser(user);
