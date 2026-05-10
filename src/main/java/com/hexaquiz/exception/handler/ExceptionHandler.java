@@ -5,6 +5,7 @@ import com.hexaquiz.dto.error.ValidationError;
 import com.hexaquiz.exception.error.ErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -38,5 +39,20 @@ public class ExceptionHandler {
                 );
         var error = new ValidationError(errors, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ResponseError> handleUsernameNotFound(
+            UsernameNotFoundException ex
+    ) {
+
+        ResponseError error = new ResponseError(
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
     }
 }

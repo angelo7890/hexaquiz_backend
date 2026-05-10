@@ -44,7 +44,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 return;
             }
             String typeFromToken = jwtService.getTypeFromToken(token);
-            if (typeFromToken.equals("refresh_token") && !request.getRequestURI().equals("/hexaquiz/user/refresh-token")) {
+            if (typeFromToken.equals("refresh_token") && !request.getRequestURI().equals("/hexaquiz/user/refresh")) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.setContentType("application/json");
                 ResponseError responseError = new ResponseError(
