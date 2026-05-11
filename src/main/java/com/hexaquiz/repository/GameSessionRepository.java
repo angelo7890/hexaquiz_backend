@@ -15,17 +15,17 @@ import java.util.UUID;
 public interface GameSessionRepository extends JpaRepository<GameSessionModel, UUID> {
 
     @Query("""
-        SELECT new com.hexaquiz.dto.ranking.RankingDto(
-            u.id,
-            u.username,
-            u.name,
-            u.profileImage,
-            SUM(g.points)
-        )
-        FROM GameSessionModel g
-        JOIN g.user u
-        GROUP BY u.id, u.username, u.name, u.profileImage
-        ORDER BY SUM(g.points) DESC
+    SELECT new com.hexaquiz.dto.ranking.RankingDto(
+        u.id,
+        u.username,
+        u.name,
+        u.profileImage,
+        SUM(g.points)
+    )
+    FROM GameSessionModel g
+    JOIN g.user u
+    GROUP BY u.id, u.username, u.name, u.profileImage
+    ORDER BY SUM(g.points) DESC, MAX(g.completedAt) ASC
     """)
     Page<RankingDto> getGeneralRanking(Pageable pageable);
 

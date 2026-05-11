@@ -54,11 +54,11 @@ public class QuizService {
         int quizzesPlayed = userRepository.countFinishedByUserId(UUID.fromString(id));
         int pontos = userRepository.sumPointsByUserId(UUID.fromString(id));
 
-        int accuracy = pontos == 0
+        double accuracy = pontos == 0
                 ? 0
-                : quizzesPlayed / pontos * 100;
+                : ((double) quizzesPlayed / pontos) * 100;
 
-        return new ResponseStatisticsDto(quizzesPlayed, accuracy);
+        return new ResponseStatisticsDto(quizzesPlayed, accuracy, pontos);
     }
 
     public ResponsePaginationRankingDto getRanking(int page, int size){
@@ -74,7 +74,7 @@ public class QuizService {
                 .findByUserIdAndFinishedFalse(UUID.fromString(userId))
                 .orElseThrow(() -> new ErrorException("Sem sessao ativa para esse id: "+ userId, HttpStatus.BAD_REQUEST));
 
-        LocalDate today = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        LocalDate today = getTime().toLocalDate();
         List<QuestionModel> questions =
                 questionRepository.findByScheduledDateOrderBySequenceAsc(today);
 
@@ -92,7 +92,7 @@ public class QuizService {
 
         if (nextIndex >= questions.size()) {
             session.setFinished(true);
-            session.setCompletedAt(LocalDateTime.now());
+            session.setCompletedAt(getTime());
         } else {
             session.setGameSessionIndex(nextIndex);
         }
@@ -106,7 +106,7 @@ public class QuizService {
     }
     public ResponseDailyQuestionsDto getDailyQuestions(String userId) {
 
-        LocalDate today = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        LocalDate today = getTime().toLocalDate();
 
         List<QuestionModel> questions =
                 questionRepository.findByScheduledDateOrderBySequenceAsc(today);
@@ -123,7 +123,7 @@ public class QuizService {
                             gameSessionRepository.findByUserIdAndFinishedFalse(UUID.fromString(userId)).
                                     ifPresent(oldSession -> {
                                         oldSession.setFinished(true);
-                                        oldSession.setCompletedAt(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+                                        oldSession.setCompletedAt(getTime());
                                         gameSessionRepository.save(oldSession);
                                     });
                             return gameSessionService.createGameSession(userId,new RequestCreateGameSessionDto(0,quizId));
@@ -186,5 +186,9 @@ public class QuizService {
                 .replaceAll("\\p{M}", "")
                 .trim()
                 .toLowerCase();
+    }
+
+    private LocalDateTime getTime(){
+        return LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
     }
 }

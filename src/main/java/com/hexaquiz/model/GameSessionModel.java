@@ -30,7 +30,6 @@ public class GameSessionModel {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(updatable = false)
     private LocalDateTime completedAt;
 
     @PrePersist
