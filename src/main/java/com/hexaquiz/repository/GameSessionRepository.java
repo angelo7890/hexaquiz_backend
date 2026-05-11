@@ -29,6 +29,22 @@ public interface GameSessionRepository extends JpaRepository<GameSessionModel, U
     """)
     Page<RankingDto> getGeneralRanking(Pageable pageable);
 
+    @Query(value = """
+    SELECT position FROM ( SELECT 
+            u.id,
+            RANK() OVER (
+                ORDER BY
+                    COALESCE(SUM(g.points), 0) DESC,
+                    MAX(g.completed_at) ASC
+            ) AS position
+        FROM game_session g
+        JOIN users u ON u.id = g.user_id
+        GROUP BY u.id
+    ) ranked_users
+    WHERE ranked_users.id = :userId
+    """, nativeQuery = true)
+    Long getUserRankingPosition(UUID userId);
+
     GameSessionModel findByid(UUID id);
 
     Optional<GameSessionModel> findByUserIdAndFinishedFalse(UUID userId);

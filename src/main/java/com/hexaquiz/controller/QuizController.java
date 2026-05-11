@@ -30,9 +30,10 @@ public class QuizController {
         return ResponseEntity.ok(quizService.statisticsUser(id));
     }
 
-    @GetMapping("/rancking")
-    public ResponseEntity<ResponsePaginationRankingDto> ranking(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
-        return ResponseEntity.ok(quizService.getRanking(page, size));
+    @GetMapping("/ranking/{id}")
+    public ResponseEntity<ResponsePaginationRankingDto> ranking(@PathVariable String id, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        System.out.println("chegou aqui");
+        return ResponseEntity.ok(quizService.getRanking(id,page, size));
     }
 
     @GetMapping("/daily/{id}")

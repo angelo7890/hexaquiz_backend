@@ -1,9 +1,6 @@
 package com.hexaquiz.service;
 
-import com.hexaquiz.dto.request.RequestCreateUserDto;
-import com.hexaquiz.dto.request.RequestLoginDto;
-import com.hexaquiz.dto.request.RequestUpdatePasswordDto;
-import com.hexaquiz.dto.request.RequestUpdateProfileImageDto;
+import com.hexaquiz.dto.request.*;
 import com.hexaquiz.dto.response.ResponseLoginDto;
 import com.hexaquiz.dto.response.ResponsePaginationUserDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
@@ -74,6 +71,24 @@ public class UserService {
         var user = userRepository.findByid(UUID.fromString(id));
         user.setPassword(dto.password());
         userRepository.save(user);
+    }
+
+    public ResponseUserDto updateNameAndUsername(RequestUpdateNameAndUsernameDto dto, String id){
+        if(dto.username()!= null){
+            if(userRepository.existsByusername(dto.username())){
+                throw new ErrorException("Username ja existe", HttpStatus.BAD_REQUEST);
+            }
+        }
+        var user  = userRepository.findByid(UUID.fromString(id));
+        if(user == null){
+            throw new ErrorException("usuario nao encontrado", HttpStatus.BAD_REQUEST);
+        }
+        user.setUsername(dto.username());
+        if(dto.name()!= null){
+            user.setName(dto.name());
+        }
+        userRepository.save(user);
+        return  userMapper.toDto(user);
     }
 
     public void deleteUser(String id) {

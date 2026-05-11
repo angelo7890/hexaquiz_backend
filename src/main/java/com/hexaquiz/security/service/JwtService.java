@@ -6,8 +6,10 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hexaquiz.dto.tokens.Tokens;
+import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,7 +44,7 @@ public class JwtService {
                     .withExpiresAt(genExpiration(accessTokenExpiration))
                     .sign(algorithm);
         }catch (JWTCreationException exception) {
-            throw new RuntimeException(exception);
+            throw new ErrorException(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -56,7 +58,7 @@ public class JwtService {
                     .withExpiresAt(genExpiration(refreshTokenExpiration))
                     .sign(algorithm);
         }catch (JWTCreationException exception) {
-            throw new RuntimeException(exception);
+            throw new ErrorException(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

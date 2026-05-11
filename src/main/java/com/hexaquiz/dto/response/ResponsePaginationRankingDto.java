@@ -6,6 +6,7 @@ import java.util.List;
 
 public record ResponsePaginationRankingDto(
         List<RankingDto> content,
+        long positionRanking,
         int totalPages,
         long totalElements,
         int pageSize,

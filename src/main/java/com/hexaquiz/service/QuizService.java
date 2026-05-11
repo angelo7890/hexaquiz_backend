@@ -56,15 +56,16 @@ public class QuizService {
 
         double accuracy = pontos == 0
                 ? 0
-                : ((double) quizzesPlayed / pontos) * 100;
+                : ((double) quizzesPlayed / pontos) * 10000;
 
         return new ResponseStatisticsDto(quizzesPlayed, accuracy, pontos);
     }
 
-    public ResponsePaginationRankingDto getRanking(int page, int size){
+    public ResponsePaginationRankingDto getRanking(String id, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
+        long position = gameSessionRepository.getUserRankingPosition(UUID.fromString(id));
         Page<RankingDto> ranking = gameSessionRepository.getGeneralRanking(pageable);
-        return rankingMapper.toResponsePaginationRankingDto(ranking);
+        return rankingMapper.toResponsePaginationRankingDto(ranking, position);
     }
 
     @Transactional

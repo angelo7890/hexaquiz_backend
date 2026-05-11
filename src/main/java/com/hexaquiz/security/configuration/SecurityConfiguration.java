@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/question/create").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/daily/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/answer/{id}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/rancking").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/hexaquiz/ranking/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/statistics/{id}").permitAll()
                         .anyRequest().authenticated()
                 )

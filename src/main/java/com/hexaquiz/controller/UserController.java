@@ -1,9 +1,6 @@
 package com.hexaquiz.controller;
 
-import com.hexaquiz.dto.request.RequestCreateUserDto;
-import com.hexaquiz.dto.request.RequestLoginDto;
-import com.hexaquiz.dto.request.RequestUpdatePasswordDto;
-import com.hexaquiz.dto.request.RequestUpdateProfileImageDto;
+import com.hexaquiz.dto.request.*;
 import com.hexaquiz.dto.response.ResponseLoginDto;
 import com.hexaquiz.dto.response.ResponsePaginationUserDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
@@ -59,9 +56,14 @@ public class UserController {
     }
 
     @PatchMapping("/update/password/{id}")
-    public ResponseEntity<?>  updatePassword(@PathVariable String id, @RequestBody @Valid RequestUpdatePasswordDto dto){
+    public ResponseEntity<?> updatePassword(@PathVariable String id, @RequestBody @Valid RequestUpdatePasswordDto dto){
         userService.updatePassword(id, dto);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<ResponseUserDto> updateNameAndUsername(@PathVariable String id, @RequestBody RequestUpdateNameAndUsernameDto dto){
+        return ResponseEntity.ok(userService.updateNameAndUsername(dto, id));
     }
 
     @DeleteMapping("/{id}")

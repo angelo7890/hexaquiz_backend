@@ -4,6 +4,7 @@ import com.hexaquiz.dto.request.RequestLoginDto;
 import com.hexaquiz.dto.response.ResponseLoginDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
 import com.hexaquiz.dto.tokens.Tokens;
+import com.hexaquiz.repository.GameSessionRepository;
 import com.hexaquiz.security.UserPrincipal;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,10 +17,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final AuthorizationService authorizationService;
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, AuthorizationService authorizationService) {
+
+    private final GameSessionRepository gameSessionRepository;
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, AuthorizationService authorizationService, GameSessionRepository gameSessionRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.authorizationService = authorizationService;
+        this.gameSessionRepository = gameSessionRepository;
     }
 
     public ResponseLoginDto login(RequestLoginDto dto){
@@ -30,14 +34,17 @@ public class AuthService {
             if(auth.isAuthenticated()){
                 UserPrincipal user = (UserPrincipal) auth.getPrincipal();
                 Tokens t = jwtService.getJwtUserToken(user);
+                long position = gameSessionRepository.getUserRankingPosition(user.getId());
                 return new ResponseLoginDto(
-                        t, new ResponseUserDto(
+                        t,
+                        new ResponseUserDto(
                                 user.getId().toString(),
                                 user.getname(),
                                 user.getUsername(),
                                 user.getProfileImage(),
                                 user.getCreatedAt(),
-                                user.getType() )
+                                user.getType()),
+                        position
                 );
             }
             throw new BadCredentialsException("Invalid username or password");

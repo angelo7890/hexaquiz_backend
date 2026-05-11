@@ -4,6 +4,8 @@ import com.hexaquiz.dto.tokens.Tokens;
 
 public record ResponseLoginDto(
         Tokens tokens,
-        ResponseUserDto user
+        ResponseUserDto user,
+
+        long positionRanking
 ) {
 }
