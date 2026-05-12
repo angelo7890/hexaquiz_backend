@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/answer/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/ranking/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/statistics/{id}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/log").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/hexaquiz/log").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
