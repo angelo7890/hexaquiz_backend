@@ -66,24 +66,24 @@ public class UserService {
     }
     public void updatePassword(String id, RequestUpdatePasswordDto dto) {
         if(dto.password().length() < 6) {
-            throw new IllegalArgumentException("Password too short");
+            throw new ErrorException("password deve conter no minimo 6 caracteres", HttpStatus.BAD_REQUEST );
         }
         var user = userRepository.findByid(UUID.fromString(id));
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
         userRepository.save(user);
     }
 
     public ResponseUserDto updateNameAndUsername(RequestUpdateNameAndUsernameDto dto, String id){
-        if(dto.username()!= null){
-            if(userRepository.existsByusername(dto.username())){
-                throw new ErrorException("Username ja existe", HttpStatus.BAD_REQUEST);
-            }
-        }
         var user  = userRepository.findByid(UUID.fromString(id));
         if(user == null){
             throw new ErrorException("usuario nao encontrado", HttpStatus.BAD_REQUEST);
         }
-        user.setUsername(dto.username());
+        if(dto.username()!= null){
+            if(userRepository.existsByusername(dto.username())){
+                throw new ErrorException("Username ja existe", HttpStatus.BAD_REQUEST);
+            }
+            user.setUsername(dto.username());
+        }
         if(dto.name()!= null){
             user.setName(dto.name());
         }
