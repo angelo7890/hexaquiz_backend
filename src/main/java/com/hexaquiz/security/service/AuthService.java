@@ -4,8 +4,10 @@ import com.hexaquiz.dto.request.RequestLoginDto;
 import com.hexaquiz.dto.response.ResponseLoginDto;
 import com.hexaquiz.dto.response.ResponseUserDto;
 import com.hexaquiz.dto.tokens.Tokens;
+import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.repository.GameSessionRepository;
 import com.hexaquiz.security.UserPrincipal;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,7 +54,7 @@ public class AuthService {
             }
             throw new BadCredentialsException("Invalid username or password");
         }catch (Exception e){
-            throw new RuntimeException(e);
+            throw new ErrorException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

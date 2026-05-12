@@ -1,14 +1,14 @@
 package com.hexaquiz.controller;
 
 import com.hexaquiz.dto.request.RequestAnswerDto;
-import com.hexaquiz.dto.response.ResponseAnswerDto;
-import com.hexaquiz.dto.response.ResponseDailyQuestionsDto;
-import com.hexaquiz.dto.response.ResponsePaginationRankingDto;
-import com.hexaquiz.dto.response.ResponseStatisticsDto;
+import com.hexaquiz.dto.response.*;
 import com.hexaquiz.service.QuizService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/hexaquiz/")
@@ -24,6 +24,10 @@ public class QuizController {
     public ResponseEntity<ResponseAnswerDto> answer(@PathVariable String id, @RequestBody RequestAnswerDto requestAnswerDto){
         return ResponseEntity.ok(quizService.answerQuestion(requestAnswerDto, id));
     }
+    @GetMapping("/log")
+    public ResponseEntity<ResponseDailyLogDto> getDailyLogs(@RequestParam LocalDate date) {
+        return ResponseEntity.ok(quizService.getDailyLogs(date));
+    }
 
     @GetMapping("/statistics/{id}")
     public ResponseEntity<ResponseStatisticsDto> statistics(@PathVariable String id){
@@ -31,9 +35,12 @@ public class QuizController {
     }
 
     @GetMapping("/ranking/{id}")
-    public ResponseEntity<ResponsePaginationRankingDto> ranking(@PathVariable String id, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
-        System.out.println("chegou aqui");
-        return ResponseEntity.ok(quizService.getRanking(id,page, size));
+    public ResponseEntity<ResponseRankingsDto> ranking(@PathVariable String id,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size,
+                                                                @RequestParam LocalDate startDate,
+                                                                @RequestParam LocalDate endDate) {
+        return ResponseEntity.ok(quizService.getRanking(id,page, size, startDate, endDate));
     }
 
     @GetMapping("/daily/{id}")

@@ -1,14 +1,13 @@
 package com.hexaquiz.service;
 
+import com.hexaquiz.dto.log.DailyLogDto;
+import com.hexaquiz.dto.log.LogDto;
 import com.hexaquiz.dto.option.OptionDailyDto;
 import com.hexaquiz.dto.question.QuestionDto;
 import com.hexaquiz.dto.ranking.RankingDto;
 import com.hexaquiz.dto.request.RequestAnswerDto;
 import com.hexaquiz.dto.request.RequestCreateGameSessionDto;
-import com.hexaquiz.dto.response.ResponseAnswerDto;
-import com.hexaquiz.dto.response.ResponseDailyQuestionsDto;
-import com.hexaquiz.dto.response.ResponsePaginationRankingDto;
-import com.hexaquiz.dto.response.ResponseStatisticsDto;
+import com.hexaquiz.dto.response.*;
 import com.hexaquiz.dto.session.SessionDto;
 import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.mapper.RankingMapper;
@@ -29,6 +28,7 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -61,11 +61,18 @@ public class QuizService {
         return new ResponseStatisticsDto(quizzesPlayed, accuracy, pontos);
     }
 
-    public ResponsePaginationRankingDto getRanking(String id, int page, int size){
+    public ResponseRankingsDto getRanking(String id, int page, int size, LocalDate startDate, LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        long position = gameSessionRepository.getUserRankingPosition(UUID.fromString(id));
-        Page<RankingDto> ranking = gameSessionRepository.getGeneralRanking(pageable);
-        return rankingMapper.toResponsePaginationRankingDto(ranking, position);
+        long geralRankingPosition = gameSessionRepository.getUserRankingPosition(UUID.fromString(id));
+        Page<RankingDto> geralRanking = gameSessionRepository.getGeneralRanking(pageable);
+        LocalDateTime start = startDate.atStartOfDay();
+
+        LocalDateTime end = endDate
+                .plusDays(1)
+                .atStartOfDay();
+        long weeklyRankingPosition = gameSessionRepository.getWeeklyUserRankingPosition(UUID.fromString(id),start,end);
+        Page<RankingDto> weeklyRanking = gameSessionRepository.getWeeklyRanking(start, end, pageable);
+        return rankingMapper.toResponsePaginationRankingDto(geralRanking,weeklyRanking, geralRankingPosition, weeklyRankingPosition);
     }
 
     @Transactional
@@ -141,6 +148,29 @@ public class QuizService {
         );
 
         return new ResponseDailyQuestionsDto(questionDTOs, sessionDTO);
+    }
+
+    public ResponseDailyLogDto getDailyLogs(LocalDate startDate) {
+        if(startDate == null) {
+            throw new ErrorException("data nao pode ser nula ou vazia",  HttpStatus.BAD_REQUEST);
+        }
+        LocalDate endDate = getTime().toLocalDate();
+        List<DailyLogDto> response = new ArrayList<>();
+
+        while (!startDate.isAfter(endDate)) {
+
+            LocalDateTime start = startDate.atStartOfDay();
+            LocalDateTime end = startDate.plusDays(1).atStartOfDay();
+
+            List<LogDto> users =
+                    gameSessionRepository.findUsersByDate(start, end);
+
+            response.add(new DailyLogDto(startDate, users));
+
+            startDate = startDate.plusDays(1);
+        }
+
+        return new ResponseDailyLogDto(response);
     }
 
     private QuestionDto mapQuestion(QuestionModel q) {

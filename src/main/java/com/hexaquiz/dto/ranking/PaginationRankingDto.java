@@ -1,10 +1,8 @@
-package com.hexaquiz.dto.response;
-
-import com.hexaquiz.dto.ranking.RankingDto;
+package com.hexaquiz.dto.ranking;
 
 import java.util.List;
 
-public record ResponsePaginationRankingDto(
+public record PaginationRankingDto(
         List<RankingDto> content,
         long positionRanking,
         int totalPages,
