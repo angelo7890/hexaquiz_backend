@@ -6,6 +6,6 @@ public record ResponseLoginDto(
         Tokens tokens,
         ResponseUserDto user,
 
-        long positionRanking
+        Long positionRanking
 ) {
 }

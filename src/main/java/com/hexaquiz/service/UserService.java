@@ -42,7 +42,7 @@ public class UserService {
              throw new ErrorException("Email ja existe", HttpStatus.BAD_REQUEST);
          }
 
-        userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));
+         userRepository.save(new UserModel(dto.name(), dto.username(), passwordEncoder.encode(dto.password()), dto.profileUser(), dto.email()));
 
          return authService.login(new RequestLoginDto(dto.username(), dto.password()));
     }

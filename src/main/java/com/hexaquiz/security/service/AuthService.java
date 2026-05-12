@@ -34,7 +34,10 @@ public class AuthService {
             if(auth.isAuthenticated()){
                 UserPrincipal user = (UserPrincipal) auth.getPrincipal();
                 Tokens t = jwtService.getJwtUserToken(user);
-                long position = gameSessionRepository.getUserRankingPosition(user.getId());
+                Long position = gameSessionRepository.getUserRankingPosition(user.getId());
+                if(position == null){
+                    position = 0L;
+                }
                 return new ResponseLoginDto(
                         t,
                         new ResponseUserDto(

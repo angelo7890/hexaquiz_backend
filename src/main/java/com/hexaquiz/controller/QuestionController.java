@@ -22,6 +22,6 @@ public class QuestionController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody RequestCreateQuestionDto request ){
         questionService.createQuestion(request);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
