@@ -57,8 +57,8 @@ public interface GameSessionRepository extends JpaRepository<GameSessionModel, U
     )
     FROM GameSessionModel g
     JOIN g.user u
-    WHERE g.completedAt >= :start
-    AND g.completedAt < :end
+    WHERE g.createdAt >= :start
+    AND g.createdAt < :end
     """)
     List<LogDto> findUsersByDate(LocalDateTime start, LocalDateTime end);
 
