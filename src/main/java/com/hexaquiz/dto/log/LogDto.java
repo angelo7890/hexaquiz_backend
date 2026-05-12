@@ -1,4 +1,4 @@
-﻿package com.hexaquiz.dto.log;
+package com.hexaquiz.dto.log;
 
 import java.util.UUID;
 

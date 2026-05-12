@@ -4,7 +4,6 @@ import com.hexaquiz.dto.ranking.RankingDto;
 import com.hexaquiz.dto.request.RequestCreateGameSessionDto;
 import com.hexaquiz.dto.response.ResponseGameSessionDto;
 import com.hexaquiz.dto.response.ResponsePaginationGameSessionDto;
-import com.hexaquiz.dto.response.ResponsePaginationRankingDto;
 import com.hexaquiz.exception.error.ErrorException;
 import com.hexaquiz.mapper.GameSessionMapper;
 import com.hexaquiz.mapper.RankingMapper;
