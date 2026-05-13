@@ -63,14 +63,19 @@ public class QuizService {
 
     public ResponseRankingsDto getRanking(String id, int page, int size, LocalDate startDate, LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        long geralRankingPosition = gameSessionRepository.getUserRankingPosition(UUID.fromString(id));
+        Long geralRankingPosition = gameSessionRepository.getUserRankingPosition(UUID.fromString(id));
+        if(geralRankingPosition == null){
+            geralRankingPosition = 0L;
+        }
         Page<RankingDto> geralRanking = gameSessionRepository.getGeneralRanking(pageable);
         LocalDateTime start = startDate.atStartOfDay();
-
         LocalDateTime end = endDate
                 .plusDays(1)
                 .atStartOfDay();
-        long weeklyRankingPosition = gameSessionRepository.getWeeklyUserRankingPosition(UUID.fromString(id),start,end);
+        Long weeklyRankingPosition = gameSessionRepository.getWeeklyUserRankingPosition(UUID.fromString(id),start,end);
+        if(weeklyRankingPosition == null){
+            weeklyRankingPosition = 0L;
+        }
         Page<RankingDto> weeklyRanking = gameSessionRepository.getWeeklyRanking(start, end, pageable);
         return rankingMapper.toResponsePaginationRankingDto(geralRanking,weeklyRanking, geralRankingPosition, weeklyRankingPosition);
     }
