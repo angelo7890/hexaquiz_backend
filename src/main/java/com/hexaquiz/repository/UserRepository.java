@@ -12,8 +12,8 @@ public interface UserRepository extends JpaRepository<UserModel, UUID> {
     @Query("SELECT COALESCE(SUM(g.points), 0) FROM GameSessionModel g WHERE g.user.id = :userId")
     Integer sumPointsByUserId(UUID userId);
 
-    @Query("SELECT COUNT(g) FROM GameSessionModel g WHERE g.user.id = :userId AND g.finished = true")
-    Integer countFinishedByUserId(UUID userId);
+    @Query("SELECT COUNT(g) FROM GameSessionModel g WHERE g.user.id = :userId")
+    Integer countByUserId(UUID userId);
 
     boolean existsByusername(String username);
     boolean existsByemail(String email);

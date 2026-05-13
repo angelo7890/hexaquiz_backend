@@ -50,14 +50,19 @@ public class QuizService {
 
     public ResponseStatisticsDto statisticsUser(String id){
 
-        int quizzesPlayed = userRepository.countFinishedByUserId(UUID.fromString(id));
-        int pontos = userRepository.sumPointsByUserId(UUID.fromString(id));
+        int quizzesPlayed = userRepository.countByUserId(UUID.fromString(id));
+        Integer pontos = userRepository.sumPointsByUserId(UUID.fromString(id));
 
-        double accuracy = pontos == 0
+
+        int totalPoints = pontos != null ? pontos : 0;
+
+        int totalPossiblePoints = quizzesPlayed * 100;
+
+        double accuracy = totalPossiblePoints == 0
                 ? 0
-                : ((double) quizzesPlayed / pontos) * 10000;
+                : ((double) totalPoints / totalPossiblePoints) * 10000;
 
-        return new ResponseStatisticsDto(quizzesPlayed, accuracy, pontos);
+        return new ResponseStatisticsDto(quizzesPlayed, accuracy, totalPoints);
     }
 
     public ResponseRankingsDto getRanking(String id, int page, int size, LocalDate startDate, LocalDate endDate) {
