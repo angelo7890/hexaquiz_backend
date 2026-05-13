@@ -36,11 +36,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/user/create").permitAll()
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/user/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/hexaquiz/question/create").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/daily/{id}").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/hexaquiz/answer/{id}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/ranking/{id}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/statistics/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/log").hasRole("ADM")
                         .anyRequest().authenticated()
                 )
