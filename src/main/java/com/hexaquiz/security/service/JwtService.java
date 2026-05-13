@@ -68,6 +68,7 @@ public class JwtService {
             DecodedJWT jwt = JWT.require(algorithm).build().verify(token);
             return jwt.getSubject();
         }catch (JWTVerificationException exception) {
+            System.out.println(exception.getMessage());
             return "";
         }
     }

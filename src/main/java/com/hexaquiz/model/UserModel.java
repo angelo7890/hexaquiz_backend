@@ -42,7 +42,7 @@ public class UserModel implements UserDetails {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserTypeEnum type;
 
@@ -112,10 +112,15 @@ public class UserModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.type ==UserTypeEnum.ADM){
-            return List.of(new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER"));
-        }else{
-            return List.of(new SimpleGrantedAuthority("USER"));
+        if (this.type == UserTypeEnum.ADM) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADM"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+        } else {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
         }
     }
 

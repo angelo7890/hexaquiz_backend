@@ -1,5 +1,7 @@
 package com.hexaquiz.security.configuration;
 
+import com.hexaquiz.enums.UserTypeEnum;
+import com.hexaquiz.security.component.CustomAccessDeniedHandler;
 import com.hexaquiz.security.component.SecurityFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private final SecurityFilter securityFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfiguration(SecurityFilter securityFilter) {
+    public SecurityConfiguration(SecurityFilter securityFilter, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.securityFilter = securityFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -33,14 +37,15 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/user/create").permitAll()
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/question/create").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/daily/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/hexaquiz/daily/{id}").authenticated()
                         .requestMatchers(HttpMethod.POST, "/hexaquiz/answer/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/ranking/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hexaquiz/statistics/{id}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hexaquiz/log").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/hexaquiz/log").hasRole("ADM")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler))
                 .build();
     }
 

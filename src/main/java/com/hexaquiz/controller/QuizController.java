@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/hexaquiz/")
+@RequestMapping("/hexaquiz")
 public class QuizController {
 
     private final QuizService quizService;
