@@ -60,7 +60,7 @@ public class QuizService {
 
         double accuracy = totalPossiblePoints == 0
                 ? 0
-                : ((double) totalPoints / totalPossiblePoints) * 10000;
+                : ((double) totalPoints / totalPossiblePoints) * 10000; //TODO retirar esse 10000 e colocar apenas 100
 
         return new ResponseStatisticsDto(quizzesPlayed, accuracy, totalPoints);
     }
@@ -179,7 +179,24 @@ public class QuizService {
             startDate = startDate.plusDays(1);
         }
 
-        return new ResponseDailyLogDto(response);
+        Integer totalUsers = userRepository.countByUsers();
+
+        if(totalUsers == null){
+            throw new ErrorException("quantidade de usuarios nao pode ser nula",  HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseDailyLogDto(totalUsers,response);
+    }
+
+    public ResponseQuestionsDto getQuestions(LocalDate date){
+        if(date == null) {
+            throw new ErrorException("data nao pode ser nula",  HttpStatus.BAD_REQUEST);
+        }
+        var questions = questionRepository.findByScheduledDate(date);
+        List<QuestionDto> questionDTOs = questions.stream()
+                .map(this::mapQuestion)
+                .toList();
+        return  new ResponseQuestionsDto(questionDTOs);
     }
 
     private QuestionDto mapQuestion(QuestionModel q) {

@@ -15,6 +15,9 @@ public interface UserRepository extends JpaRepository<UserModel, UUID> {
     @Query("SELECT COUNT(g) FROM GameSessionModel g WHERE g.user.id = :userId")
     Integer countByUserId(UUID userId);
 
+    @Query("SELECT COUNT(u) FROM UserModel u")
+    Integer countByUsers();
+
     boolean existsByusername(String username);
     boolean existsByemail(String email);
 
