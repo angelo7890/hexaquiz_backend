@@ -192,7 +192,7 @@ public class QuizService {
         if(date == null) {
             throw new ErrorException("data nao pode ser nula",  HttpStatus.BAD_REQUEST);
         }
-        var questions = questionRepository.findByScheduledDate(date);
+        var questions = questionRepository.findByScheduledDateOrderBySequenceAsc(date);
         List<QuestionDto> questionDTOs = questions.stream()
                 .map(this::mapQuestion)
                 .toList();
